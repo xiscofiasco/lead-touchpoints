@@ -2,7 +2,7 @@
 
 Lead by touchpoint report: one row per lead, one card per touchpoint.
 
-- `public/index.html` is the page. It opens with anonymized sample data.
+- `public/index.html` is the page. It asks for a product ID, then shows made up demo data from `public/demo.js`.
 - `api/report.js` is the server route. It reads the latest leads and their journeys from the Hyros API and returns them as touchpoints.
 
 ## Vercel environment variables
