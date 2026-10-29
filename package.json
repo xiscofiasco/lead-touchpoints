@@ -1,0 +1,6 @@
+{
+  "name": "lead-touchpoints",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Lead by touchpoint report: one row per lead, one card per touchpoint"
+}

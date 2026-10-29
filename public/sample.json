@@ -1,0 +1,44 @@
+{
+  "demo": true,
+  "skippedNoAttribution": 3,
+  "leads": [
+    { "email": "sarah@example.com", "touchpoints": [
+      { "kind": "meta", "label": "Meta", "detail": "Cold UGC Video V2", "tip": "Prospecting / Broad / Cold UGC Video V2" },
+      { "kind": "organic", "label": "Email", "detail": "welcome_day1", "tip": "welcome_day1" },
+      { "kind": "organic", "label": "Google organic", "detail": "google_organic", "tip": "google_organic" },
+      { "kind": "call", "label": "Booked call", "detail": "Strategy Call", "tip": "Strategy Call" },
+      { "kind": "purchase", "label": "Purchase made", "detail": "$2,222 · Annual Program", "tip": "$2,222 · Annual Program" }
+    ]},
+    { "email": "mike@example.com", "touchpoints": [
+      { "kind": "organic", "label": "Google organic", "detail": "google_organic", "tip": "google_organic" },
+      { "kind": "organic", "label": "Email", "detail": "nurture_3", "tip": "nurture_3" },
+      { "kind": "organic", "label": "Email", "detail": "promo_oct", "tip": "promo_oct" },
+      { "kind": "purchase", "label": "Purchase made", "detail": "$1,063 · Starter", "tip": "$1,063 · Starter" }
+    ]},
+    { "email": "jen@example.com", "touchpoints": [
+      { "kind": "meta", "label": "Meta", "detail": "Retargeting Carousel", "tip": "Retargeting Carousel" },
+      { "kind": "call", "label": "Booked call", "detail": "Discovery Call", "tip": "Discovery Call" }
+    ]},
+    { "email": "alex@example.com", "touchpoints": [
+      { "kind": "organic", "label": "Manychat", "detail": "Spring Giveaway", "tip": "Spring Giveaway" },
+      { "kind": "organic", "label": "Email", "detail": "day2_story", "tip": "day2_story" },
+      { "kind": "organic", "label": "Email", "detail": "day4_offer", "tip": "day4_offer" }
+    ]},
+    { "email": "dana@example.com", "touchpoints": [
+      { "kind": "google", "label": "Google Ads", "detail": "Brand Search Exact", "tip": "Brand Search Exact" },
+      { "kind": "meta", "label": "Meta", "detail": "Retargeting Carousel", "tip": "Retargeting Carousel" },
+      { "kind": "organic", "label": "Email", "detail": "promo_oct", "tip": "promo_oct" }
+    ]},
+    { "email": "chris@example.com", "touchpoints": [
+      { "kind": "tiktok", "label": "TikTok", "detail": "Hook Test 4", "tip": "Hook Test 4" },
+      { "kind": "organic", "label": "Instagram organic", "detail": "instagram_organic", "tip": "instagram_organic" }
+    ]},
+    { "email": "lee@example.com", "touchpoints": [
+      { "kind": "reddit", "label": "Reddit", "detail": "r/entrepreneur Promoted", "tip": "r/entrepreneur Promoted" },
+      { "kind": "snapchat", "label": "Snapchat", "detail": "Story Ad 2", "tip": "Story Ad 2" }
+    ]},
+    { "email": "pat@example.com", "touchpoints": [
+      { "kind": "meta", "label": "Meta", "detail": "Cold UGC Video V2", "tip": "Cold UGC Video V2" }
+    ]}
+  ]
+}

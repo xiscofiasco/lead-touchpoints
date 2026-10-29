@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lead Touchpoints</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
+<style>
+:root{--bg:#0f1117;--panel:#171a22;--line:#2a2f3a;--text:#f2f4f8;--muted:#9aa3b2;--radius:10px}
+@media (prefers-color-scheme:light){:root{--bg:#f6f7fa;--panel:#fff;--line:#e2e5ec;--text:#14171f;--muted:#5d6676}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:14px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+main{max-width:1100px;margin:0 auto;padding:24px 16px 64px}
+h1{font-size:22px;font-weight:600;margin:0 0 4px}
+h2{font-size:13px;font-weight:600;margin:28px 0 8px}
+.sub{color:var(--muted);font-size:13px;margin:0 0 16px}
+.bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:8px}
+.bar input,.bar select,.bar button{height:34px;border-radius:8px;border:1px solid var(--line);background:var(--panel);color:var(--text);padding:0 10px;font:inherit}
+.bar button{cursor:pointer;font-weight:600}
+.bar button:hover{border-color:var(--muted)}
+.err{color:#f87171;font-size:13px;min-height:18px}
+.note{color:var(--muted);font-size:12px;margin-top:6px}
+.box{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:8px 14px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.sc{height:80px;border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;border:1px solid var(--line);background:var(--panel)}
+.sc small{font-size:12px;color:var(--muted);display:flex;gap:6px;align-items:center}
+.sc b{font-size:24px;font-weight:600}
+.tp{width:176px;height:58px;flex:none;border-radius:8px;padding:6px 8px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:1px}
+.tp b{font-size:13px;font-weight:600;display:flex;align-items:center;gap:6px}
+.tp i{font-size:16px}
+.tp span{font-size:11px;width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;opacity:.85}
+.k-meta{background:#1877f2;color:#fff}
+.k-google{background:linear-gradient(135deg,#fde68a 0 25%,#bfdbfe 25% 50%,#fecaca 50% 75%,#bbf7d0 75%);color:#1f2937;border:1px solid rgba(0,0,0,.08)}
+.k-tiktok{background:#111;color:#fff;border:1px solid #333}
+.k-reddit{background:#ff4500;color:#fff}
+.k-snapchat{background:#fffc00;color:#111}
+.k-organic{background:#7c3aed;color:#fff}
+.k-call{background:#f5c518;color:#1f1700}
+.k-purchase{background:#16a34a;color:#fff}
+.k-other{background:#4b5563;color:#fff}
+.chip{width:116px;height:28px;border-radius:6px;display:inline-flex;align-items:center;justify-content:center;gap:5px;font-size:12px;font-weight:600}
+.jr{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--line)}
+.jr:last-child{border:none}
+.jr .n{width:18px;color:var(--muted);font-size:12px}
+.jr .p{flex:1;display:flex;flex-wrap:wrap;gap:4px;align-items:center;color:var(--muted)}
+.jr .c{color:var(--muted);font-size:12px;white-space:nowrap}
+.tbl{overflow-x:auto;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:8px 12px}
+.row{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--line);min-width:max-content}
+.row:last-child{border:none}
+.em{width:230px;flex:none;font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hd{width:176px;flex:none;text-align:center;color:var(--muted);font-size:12px}
+.ar{width:10px;flex:none;text-align:center;color:var(--muted)}
+.demo{display:inline-block;font-size:11px;font-weight:600;padding:2px 8px;border-radius:6px;background:#7c3aed;color:#fff;margin-left:8px;vertical-align:middle}
+</style>
+</head>
+<body>
+<main>
+  <h1>Lead Touchpoints<span id="demo" class="demo" hidden>Sample data</span></h1>
+  <p class="sub">One row per lead, one card per touchpoint, in the order they happened.</p>
+  <div class="bar">
+    <input id="pw" type="password" placeholder="Password" autocomplete="current-password" aria-label="Password">
+    <input id="n" type="number" min="1" max="100" value="30" style="width:80px" aria-label="Number of leads" title="Number of leads">
+    <select id="min" aria-label="Minimum touchpoints"><option value="1">Any touchpoints</option><option value="2">2 or more touchpoints</option><option value="3">3 or more touchpoints</option></select>
+    <input id="from" type="date" aria-label="From date" title="Leads created since">
+    <button id="go">Load report</button>
+    <button id="sample">View sample</button>
+  </div>
+  <div id="err" class="err"></div>
+  <div id="out"></div>
+</main>
+<script>
+var ICON={meta:'ti-brand-meta',google:'ti-brand-google',tiktok:'ti-brand-tiktok',reddit:'ti-brand-reddit',snapchat:'ti-brand-snapchat',call:'ti-phone-call',purchase:'ti-credit-card',other:'ti-world'};
+var LABEL_ICON={'Google organic':'ti-brand-google','Facebook organic':'ti-brand-facebook','Instagram organic':'ti-brand-instagram','TikTok organic':'ti-brand-tiktok','Email':'ti-mail','Manychat':'ti-message-circle','Organic':'ti-leaf'};
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function icon(t){return LABEL_ICON[t.label]||ICON[t.kind]||'ti-world'}
+function card(t){return '<div class="tp k-'+t.kind+'" title="'+esc(t.tip||t.detail)+'"><b><i class="ti '+icon(t)+'"></i>'+esc(t.label)+'</b><span>'+esc(t.detail)+'</span></div>'}
+function chip(t){return '<span class="chip k-'+t.kind+'"><i class="ti '+icon(t)+'"></i>'+esc(t.label==='Purchase made'?'Purchase':t.label)+'</span>'}
+function render(d){
+  var leads=d.leads||[],counts={},order=[],paths={};
+  leads.forEach(function(l){
+    l.touchpoints.forEach(function(t){
+      if(!counts[t.label]){counts[t.label]={n:0,t:t};order.push(t.label)}
+      counts[t.label].n++;
+    });
+    var key=l.touchpoints.map(function(t){return t.label}).join('>');
+    if(!paths[key])paths[key]={n:0,tps:l.touchpoints};
+    paths[key].n++;
+  });
+  order.sort(function(a,b){return counts[b].n-counts[a].n});
+  var cards=order.map(function(k){var t=counts[k].t;return '<div class="sc"><small><i class="ti '+icon(t)+'"></i>'+esc(k)+'</small><b>'+counts[k].n+'</b></div>'}).join('');
+  var top=Object.keys(paths).map(function(k){return paths[k]}).sort(function(a,b){return b.n-a.n}).slice(0,5);
+  var jr=top.map(function(p,i){return '<div class="jr"><span class="n">'+(i+1)+'</span><div class="p">'+p.tps.map(chip).join(' › ')+'</div><span class="c">'+p.n+(p.n===1?' lead':' leads')+'</span></div>'}).join('');
+  var max=leads.reduce(function(m,l){return Math.max(m,l.touchpoints.length)},1);
+  var head='<div class="row"><div class="em" style="color:var(--muted)">Lead</div>';
+  for(var i=1;i<=max;i++){head+=(i>1?'<div class="ar"></div>':'')+'<div class="hd">Touchpoint '+i+'</div>'}
+  head+='</div>';
+  var rows=leads.map(function(l){return '<div class="row"><div class="em" title="'+esc(l.email)+'">'+esc(l.email)+'</div>'+l.touchpoints.map(function(t,i){return (i?'<div class="ar">›</div>':'')+card(t)}).join('')+'</div>'}).join('');
+  var skipped=d.skippedNoAttribution||0;
+  var foot='These are the latest '+leads.length+' leads with attribution'+(d.from?', created since '+esc(d.from):'')+'. '+skipped+' other lead'+(skipped===1?'':'s')+' created in the same period had no attribution and '+(skipped===1?'was':'were')+' left out.';
+  document.getElementById('demo').hidden=!d.demo;
+  document.getElementById('out').innerHTML=
+    '<h2>Touchpoints per source</h2><div class="cards">'+cards+'</div>'+
+    '<h2>Top 5 journeys</h2><div class="box">'+(jr||'<div class="jr">No journeys</div>')+'</div>'+
+    '<div class="note">Journeys are grouped by source type only. Leads who touched the same kinds of sources in the same order count as one journey, even if the specific ad or email was different. See the table below for exact ad and email names.</div>'+
+    '<h2>Leads</h2><div class="tbl">'+head+rows+'</div><div class="note">'+foot+'</div>';
+}
+function setErr(m){document.getElementById('err').textContent=m||''}
+function load(){
+  setErr('');
+  var pw=document.getElementById('pw').value;
+  try{if(pw)sessionStorage.setItem('lt_pw',pw)}catch(e){}
+  var q='n='+encodeURIComponent(document.getElementById('n').value)+'&min='+document.getElementById('min').value;
+  var f=document.getElementById('from').value;if(f)q+='&from='+f;
+  document.getElementById('go').textContent='Loading...';
+  fetch('/api/report?'+q,{headers:{'x-report-password':pw}}).then(function(r){return r.json().then(function(b){return{ok:r.ok,b:b}})}).then(function(x){
+    if(!x.ok)throw new Error(x.b.error||'Request failed');
+    render(x.b);
+  }).catch(function(e){setErr(e.message)}).then(function(){document.getElementById('go').textContent='Load report'});
+}
+function sample(){setErr('');fetch('sample.json').then(function(r){return r.json()}).then(render).catch(function(e){setErr(e.message)})}
+document.getElementById('go').onclick=load;
+document.getElementById('sample').onclick=sample;
+try{var s=sessionStorage.getItem('lt_pw');if(s)document.getElementById('pw').value=s}catch(e){}
+sample();
+</script>
+</body>
+</html>
