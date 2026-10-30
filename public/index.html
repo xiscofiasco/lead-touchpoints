@@ -28,6 +28,13 @@ button{font:inherit;cursor:pointer}
 .cards{display:flex;flex-wrap:wrap;gap:8px}
 .sum{padding:0 14px 14px}
 .sum h2{margin-top:12px}
+.titlebar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:9px}
+.titlebar h1{margin:0}
+.seg{display:inline-flex;gap:2px;padding:3px;max-width:100%;overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--card)}
+.seg button{border:1px solid transparent;background:transparent;color:var(--muted);padding:6px 12px;border-radius:8px;font:inherit;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap}
+.seg button:hover{color:var(--text)}
+.seg button[aria-pressed="true"]{background:var(--raised);color:var(--text);border-color:var(--line)}
+.seg button:focus-visible{outline:2px solid var(--brand);outline-offset:1px}
 .top2{display:grid;grid-template-columns:max-content minmax(0,1fr);gap:16px;align-items:stretch}
 @media (max-width:900px){.top2{grid-template-columns:minmax(0,1fr)}}
 h2.big{font-size:20px;margin-top:32px}
@@ -83,7 +90,10 @@ h2.big{font-size:20px;margin-top:32px}
 <p class="brand"><img src="hyros-logo.png" alt="Hyros" width="133" height="40"></p>
 <div class="content">
   <section id="report">
-    <h1>Lead Touchpoints<span class="demo">Demo data</span></h1>
+    <div class="titlebar">
+      <h1>Lead Touchpoints<span class="demo">Demo data</span></h1>
+      <div class="seg" id="seg" role="group" aria-label="Time period"></div>
+    </div>
     <div id="out"></div>
   </section>
 </div>
@@ -133,7 +143,20 @@ function render(d){
     '<div class="note lg">Journeys are grouped by source type only. Leads who touched the same kinds of sources in the same order count as one journey, even if the specific ad or email was different. See the table below for exact ad and email names.</div>'+
     '<h2>Leads</h2><div class="tbl" style="--n:'+max+'">'+head+rows+'</div>';
 }
-render(window.DEMO);
+var PERIODS=[['today','Today',4],['yesterday','Yesterday',6],['7d','7 days',10],['30d','30 days',14],['3m','3 months',17],['6m','6 months',19],['1y','1 year',20]];
+var period='7d',seg=document.getElementById('seg');
+PERIODS.forEach(function(p){
+  var b=document.createElement('button');
+  b.type='button';b.textContent=p[1];b.setAttribute('data-p',p[0]);
+  b.onclick=function(){period=p[0];showPeriod()};
+  seg.appendChild(b);
+});
+function showPeriod(){
+  var p=PERIODS.filter(function(x){return x[0]===period})[0];
+  [].forEach.call(seg.children,function(b){b.setAttribute('aria-pressed',b.getAttribute('data-p')===period?'true':'false')});
+  render({leads:window.DEMO.leads.slice(0,p[2])});
+}
+showPeriod();
 var root=document.documentElement,mq=window.matchMedia('(prefers-color-scheme: dark)');
 function curTheme(){return root.getAttribute('data-theme')||(mq.matches?'dark':'light')}
 function setHid(el,h){if(h)el.setAttribute('hidden','');else el.removeAttribute('hidden')}
