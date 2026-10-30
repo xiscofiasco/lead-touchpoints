@@ -35,14 +35,14 @@ h2.big{font-size:20px;margin-top:32px}
 .cards .tp{width:128px;flex:none}
 .cards.conv{flex-wrap:nowrap}
 .tp .n{font-size:14px;font-weight:600;opacity:1;color:inherit}
-.tp .rv{font-size:11px;font-weight:500;opacity:.9}
+.tp .rv{font-size:inherit;font-weight:inherit;opacity:1}
 .tp{position:relative;min-width:0;height:58px;border-radius:8px;padding:6px 4px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:1px}
 .tp b{max-width:100%;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:12px;font-weight:600;display:flex;align-items:center;gap:4px}
 .tp i{font-size:16px}
 .tp span{font-size:11px;width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;opacity:.85}
 .k-meta{background:#1877f2;color:#fff}
 .k-google{background:linear-gradient(135deg,#fde68a 0 25%,#bfdbfe 25% 50%,#fecaca 50% 75%,#bbf7d0 75%);color:#1f2937;border:1px solid rgba(0,0,0,.08)}
-.k-tiktok{background:#111;color:#fff;border:1px solid #3a3a3a}
+.k-tiktok{background:#000;color:#fff;border:1px solid rgba(255,255,255,.4)}
 .k-reddit{background:#ff4500;color:#fff}
 .k-snapchat{background:#fffc00;color:#111}
 .k-applovin{background:#0e7490;color:#fff}
@@ -96,7 +96,7 @@ h2.big{font-size:20px;margin-top:32px}
 <script src="demo.js"></script>
 <script>
 var ICON={meta:'ti-brand-meta',google:'ti-brand-google',tiktok:'ti-brand-tiktok',reddit:'ti-brand-reddit',snapchat:'ti-brand-snapchat',applovin:'ti-apps',youtube:'ti-brand-youtube',linkedin:'ti-brand-linkedin',pinterest:'ti-brand-pinterest',x:'ti-brand-x',affiliate:'ti-users-group',call:'ti-phone-call',purchase:'ti-credit-card',other:'ti-world'};
-var LABEL_ICON={'Google organic':'ti-brand-google','Facebook organic':'ti-brand-facebook','Instagram organic':'ti-brand-instagram','TikTok organic':'ti-brand-tiktok','Email':'ti-mail','SMS':'ti-message-2','Manychat':'ti-message-circle','Organic':'ti-leaf'};
+var LABEL_ICON={'Google Org':'ti-brand-google','Facebook Org':'ti-brand-facebook','Insta Org':'ti-brand-instagram','TikTok Org':'ti-brand-tiktok','Email':'ti-mail','SMS':'ti-message-2','Manychat':'ti-message-circle','Organic':'ti-leaf'};
 function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
 function icon(t){return LABEL_ICON[t.label]||ICON[t.kind]||'ti-world'}
 function card(t){return '<div class="tp k-'+t.kind+'" title="'+esc(t.tip||t.detail)+'"><b><i class="ti '+icon(t)+'"></i>'+esc(t.label)+'</b><span>'+esc(t.detail)+'</span></div>'}

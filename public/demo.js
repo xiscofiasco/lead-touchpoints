@@ -6,8 +6,8 @@
   var tiktok = function (d) { return T('tiktok', 'TikTok', d); };
   var email = function (d) { return T('organic', 'Email', d); };
   var chat = function (d) { return T('organic', 'Manychat', d); };
-  var gorg = function () { return T('organic', 'Google organic', 'google_organic'); };
-  var igorg = function () { return T('organic', 'Instagram organic', 'instagram_organic'); };
+  var gorg = function () { return T('organic', 'Google Org', 'google_organic'); };
+  var igorg = function () { return T('organic', 'Insta Org', 'instagram_organic'); };
   var call = function (d) { return T('call', 'Booked call', d); };
   var buy = function (d) { return T('purchase', 'Purchase made', d); };
   var C = 'Cold UGC Video V2', R = 'Retargeting Carousel';
