@@ -19,7 +19,7 @@ main{max-width:none;margin:0 auto;padding:20px clamp(16px,2vw,40px) 24px;positio
 .themebtn:hover{background:var(--btn-hover)}
 .brand{margin:0 0 16px}.brand img{display:block;height:40px;width:auto;filter:var(--logo-filter)}
 h1{font-size:28px;line-height:1.25;font-weight:600;margin:0 0 9px}
-h2{font-size:13px;font-weight:600;margin:28px 0 8px}
+h2{font-size:20px;font-weight:600;margin:28px 0 8px}
 .sub{color:var(--muted);font-size:14px;margin:0 0 16px}
 .content{flex:1}
 button{font:inherit;cursor:pointer}
@@ -38,7 +38,7 @@ button{font:inherit;cursor:pointer}
 .top2{display:grid;grid-template-columns:max-content minmax(0,1fr);gap:16px;align-items:stretch}
 @media (max-width:900px){.top2{grid-template-columns:minmax(0,1fr)}}
 h2.big{font-size:20px;margin-top:32px}
-.note.lg{font-size:14px}
+.note.lg{font-size:14px;font-weight:700}
 .cards .tp{width:128px;flex:none}
 .cards.conv{flex-wrap:nowrap}
 .tp .n{font-size:14px;font-weight:600;opacity:1;color:inherit}
@@ -67,12 +67,12 @@ h2.big{font-size:20px;margin-top:32px}
 .jr:last-child{border:none}
 .jr .n{width:18px;color:var(--muted);font-size:12px}
 .jr .p{flex:1;display:flex;flex-wrap:wrap;gap:4px;align-items:center;color:var(--muted)}
-.jr .c{color:var(--muted);font-size:12px;white-space:nowrap}
-.tbl{overflow-x:auto;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:8px 12px}
+.jr .c{color:var(--muted);font-size:12px;font-weight:700;white-space:nowrap}
+.tbl{overflow-x:auto;background-color:var(--card);background-image:radial-gradient(circle,var(--dot) 1px,transparent 1.5px);background-size:14px 14px;border:1px solid var(--line);border-radius:12px;padding:8px 12px}
 .row{display:grid;grid-template-columns:200px repeat(var(--n),128px);gap:16px;align-items:center;padding:6px 0;border-bottom:1px solid var(--line);min-width:calc(200px + var(--n) * 144px)}
 .row:last-child{border:none}
 .em{font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.hd{text-align:center;color:var(--muted);font-size:12px}
+.hd{text-align:center;color:var(--muted);font-size:12px;font-weight:700}
 .row>.tp::before{content:'›';position:absolute;left:-13px;top:50%;transform:translateY(-50%);width:10px;text-align:center;color:var(--muted)}
 .row>.em+.tp::before{content:none}
 .demo{display:inline-block;font-size:11px;font-weight:600;padding:2px 8px;border-radius:6px;background:var(--brand);color:#fff;margin-left:8px;vertical-align:middle}
@@ -129,7 +129,7 @@ function render(d){
   var top=Object.keys(paths).map(function(k){return paths[k]}).sort(function(a,b){return b.n-a.n}).slice(0,5);
   var jr=top.map(function(p,i){return '<div class="jr"><span class="n">'+(i+1)+'</span><div class="p">'+p.tps.map(chip).join(' › ')+'</div><span class="c">'+p.n+(p.n===1?' lead':' leads')+'</span></div>'}).join('');
   var max=leads.reduce(function(m,l){return Math.max(m,l.touchpoints.length)},1);
-  var head='<div class="row"><div class="em" style="color:var(--muted)">Lead</div>';
+  var head='<div class="row"><div class="em" style="color:var(--muted);font-weight:700">Lead</div>';
   for(var i=1;i<=max;i++){head+='<div class="hd">Touchpoint '+i+'</div>'}
   head+='</div>';
   var rows=leads.map(function(l){return '<div class="row"><div class="em" title="'+esc(l.email)+'">'+esc(l.email)+'</div>'+l.touchpoints.map(card).join('')+'</div>'}).join('');
@@ -138,12 +138,12 @@ function render(d){
       '<div class="tp k-purchase"><b><i class="ti ti-credit-card"></i>Sales</b><span class="n">'+buys+' <span class="rv">($'+rev.toLocaleString('en-US')+')</span></span></div>'+
       '<div class="tp k-call"><b><i class="ti ti-phone-call"></i>Booked calls</b><span class="n">'+calls+'</span></div>'+
     '</div></div>'+
-    '<div class="box sum"><h2>Touchpoints per source</h2><div class="cards">'+cards+'</div></div></div>'+
+    '<div class="box sum"><h2>Total Touchpoints</h2><div class="cards">'+cards+'</div></div></div>'+
     '<h2 class="big">Top 5 journeys</h2><div class="box">'+jr+'</div>'+
     '<div class="note lg">Journeys are grouped by source type only. Leads who touched the same kinds of sources in the same order count as one journey, even if the specific ad or email was different. See the table below for exact ad and email names.</div>'+
-    '<h2>Leads</h2><div class="tbl" style="--n:'+max+'">'+head+rows+'</div>';
+    '<h2 class="big">Lead Journeys</h2><div class="tbl" style="--n:'+max+'">'+head+rows+'</div>';
 }
-var PERIODS=[['today','Today',4],['yesterday','Yesterday',6],['7d','7 days',10],['30d','30 days',14],['3m','3 months',17],['6m','6 months',19],['1y','1 year',20]];
+var PERIODS=[['today','Today',12],['yesterday','Yesterday',18],['7d','7 days',30],['30d','30 days',42],['3m','3 months',51],['6m','6 months',57],['1y','1 year',60]];
 var period='7d',seg=document.getElementById('seg');
 PERIODS.forEach(function(p){
   var b=document.createElement('button');
