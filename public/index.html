@@ -26,6 +26,9 @@ button{font:inherit;cursor:pointer}
 .note{color:var(--muted);font-size:12px;margin-top:6px}
 .box{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:8px 14px}
 .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px}
+.split{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr);gap:32px;align-items:start}
+@media (max-width:900px){.split{grid-template-columns:minmax(0,1fr);gap:0}}
+.conv{grid-template-columns:repeat(auto-fit,minmax(110px,1fr))}
 .sc{height:80px;border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;border:1px solid var(--line);background:var(--card)}
 .sc small{font-size:12px;color:var(--muted);display:flex;gap:6px;align-items:center}
 .sc b{font-size:24px;font-weight:600}
@@ -96,9 +99,11 @@ function icon(t){return LABEL_ICON[t.label]||ICON[t.kind]||'ti-world'}
 function card(t){return '<div class="tp k-'+t.kind+'" title="'+esc(t.tip||t.detail)+'"><b><i class="ti '+icon(t)+'"></i>'+esc(t.label)+'</b><span>'+esc(t.detail)+'</span></div>'}
 function chip(t){return '<span class="chip k-'+t.kind+'"><i class="ti '+icon(t)+'"></i>'+esc(t.label==='Purchase made'?'Purchase':t.label)+'</span>'}
 function render(d){
-  var leads=d.leads||[],counts={},order=[],paths={};
+  var leads=d.leads||[],counts={},order=[],paths={},calls=0,buys=0,rev=0;
   leads.forEach(function(l){
     l.touchpoints.forEach(function(t){
+      if(t.kind==='call'){calls++;return}
+      if(t.kind==='purchase'){buys++;var m=/\$([\d,]+)/.exec(t.detail||'');if(m)rev+=parseInt(m[1].replace(/,/g,''),10);return}
       if(!counts[t.label]){counts[t.label]={n:0,t:t};order.push(t.label)}
       counts[t.label].n++;
     });
@@ -118,7 +123,12 @@ function render(d){
   var skipped=d.skippedNoAttribution||0;
   var foot='These are '+leads.length+' made up leads with attribution. '+skipped+' other leads created in the same period had no attribution and were left out.';
   document.getElementById('out').innerHTML=
-    '<h2>Touchpoints per source</h2><div class="cards">'+cards+'</div>'+
+    '<div class="split"><div><h2>Touchpoints per source</h2><div class="cards">'+cards+'</div></div>'+
+    '<div><h2>Conversions</h2><div class="cards conv">'+
+      '<div class="sc"><small><i class="ti ti-phone-call"></i>Booked calls</small><b>'+calls+'</b></div>'+
+      '<div class="sc"><small><i class="ti ti-credit-card"></i>Purchases</small><b>'+buys+'</b></div>'+
+      '<div class="sc"><small><i class="ti ti-coin"></i>Total revenue</small><b>$'+rev.toLocaleString('en-US')+'</b></div>'+
+    '</div></div></div>'+
     '<h2>Top 5 journeys</h2><div class="box">'+jr+'</div>'+
     '<div class="note">Journeys are grouped by source type only. Leads who touched the same kinds of sources in the same order count as one journey, even if the specific ad or email was different. See the table below for exact ad and email names.</div>'+
     '<h2>Leads</h2><div class="tbl" style="--n:'+max+'">'+head+rows+'</div><div class="note">'+foot+'</div>';
