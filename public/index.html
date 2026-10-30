@@ -10,7 +10,7 @@
 @media (prefers-color-scheme:light){:root{--bg:#f6f7fa;--panel:#fff;--line:#e2e5ec;--text:#14171f;--muted:#5d6676}}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--text);font:14px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
-main{max-width:1100px;margin:0 auto;padding:24px 16px 64px}
+main{max-width:none;margin:0 auto;padding:24px clamp(16px,2vw,40px) 64px}
 h1{font-size:22px;font-weight:600;margin:0 0 4px}
 h2{font-size:13px;font-weight:600;margin:28px 0 8px}
 .sub{color:var(--muted);font-size:13px;margin:0 0 16px}
@@ -27,7 +27,7 @@ h2{font-size:13px;font-weight:600;margin:28px 0 8px}
 .sc{height:80px;border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;border:1px solid var(--line);background:var(--panel)}
 .sc small{font-size:12px;color:var(--muted);display:flex;gap:6px;align-items:center}
 .sc b{font-size:24px;font-weight:600}
-.tp{width:160px;height:58px;flex:none;border-radius:8px;padding:6px 8px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:1px}
+.tp{position:relative;min-width:0;height:58px;border-radius:8px;padding:6px 8px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:1px}
 .tp b{font-size:13px;font-weight:600;display:flex;align-items:center;gap:6px}
 .tp i{font-size:16px}
 .tp span{font-size:11px;width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;opacity:.85}
@@ -53,11 +53,12 @@ h2{font-size:13px;font-weight:600;margin:28px 0 8px}
 .jr .p{flex:1;display:flex;flex-wrap:wrap;gap:4px;align-items:center;color:var(--muted)}
 .jr .c{color:var(--muted);font-size:12px;white-space:nowrap}
 .tbl{overflow-x:auto;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:8px 12px}
-.row{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--line);min-width:max-content}
+.row{display:grid;grid-template-columns:200px repeat(var(--n),minmax(130px,240px));gap:16px;align-items:center;padding:6px 0;border-bottom:1px solid var(--line);min-width:calc(200px + var(--n) * 146px)}
 .row:last-child{border:none}
-.em{width:200px;flex:none;font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.hd{width:160px;flex:none;text-align:center;color:var(--muted);font-size:12px}
-.ar{width:10px;flex:none;text-align:center;color:var(--muted)}
+.em{font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hd{text-align:center;color:var(--muted);font-size:12px}
+.row>.tp::before{content:'›';position:absolute;left:-13px;top:50%;transform:translateY(-50%);width:10px;text-align:center;color:var(--muted)}
+.row>.em+.tp::before{content:none}
 .demo{display:inline-block;font-size:11px;font-weight:600;padding:2px 8px;border-radius:6px;background:#7c3aed;color:#fff;margin-left:8px;vertical-align:middle}
 </style>
 </head>
@@ -106,9 +107,9 @@ function render(d,pid){
   var jr=top.map(function(p,i){return '<div class="jr"><span class="n">'+(i+1)+'</span><div class="p">'+p.tps.map(chip).join(' › ')+'</div><span class="c">'+p.n+(p.n===1?' lead':' leads')+'</span></div>'}).join('');
   var max=leads.reduce(function(m,l){return Math.max(m,l.touchpoints.length)},1);
   var head='<div class="row"><div class="em" style="color:var(--muted)">Lead</div>';
-  for(var i=1;i<=max;i++){head+=(i>1?'<div class="ar"></div>':'')+'<div class="hd">Touchpoint '+i+'</div>'}
+  for(var i=1;i<=max;i++){head+='<div class="hd">Touchpoint '+i+'</div>'}
   head+='</div>';
-  var rows=leads.map(function(l){return '<div class="row"><div class="em" title="'+esc(l.email)+'">'+esc(l.email)+'</div>'+l.touchpoints.map(function(t,i){return (i?'<div class="ar">›</div>':'')+card(t)}).join('')+'</div>'}).join('');
+  var rows=leads.map(function(l){return '<div class="row"><div class="em" title="'+esc(l.email)+'">'+esc(l.email)+'</div>'+l.touchpoints.map(card).join('')+'</div>'}).join('');
   var skipped=d.skippedNoAttribution||0;
   var foot='These are '+leads.length+' made up leads with attribution. '+skipped+' other leads created in the same period had no attribution and were left out.';
   document.getElementById('sub').textContent='Product ID '+pid+'. One row per lead, one card per touchpoint, in the order they happened.';
@@ -116,7 +117,7 @@ function render(d,pid){
     '<h2>Touchpoints per source</h2><div class="cards">'+cards+'</div>'+
     '<h2>Top 5 journeys</h2><div class="box">'+jr+'</div>'+
     '<div class="note">Journeys are grouped by source type only. Leads who touched the same kinds of sources in the same order count as one journey, even if the specific ad or email was different. See the table below for exact ad and email names.</div>'+
-    '<h2>Leads</h2><div class="tbl">'+head+rows+'</div><div class="note">'+foot+'</div>';
+    '<h2>Leads</h2><div class="tbl" style="--n:'+max+'">'+head+rows+'</div><div class="note">'+foot+'</div>';
 }
 document.getElementById('form').onsubmit=function(e){
   e.preventDefault();
