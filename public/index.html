@@ -31,9 +31,9 @@ button{font:inherit;cursor:pointer}
 .titlebar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:9px}
 .titlebar h1{margin:0}
 .seg{display:inline-flex;gap:2px;padding:3px;max-width:100%;overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--card)}
-.seg button{border:1px solid transparent;background:transparent;color:var(--muted);padding:6px 12px;border-radius:8px;font:inherit;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap}
+.seg button{border:1.5px solid transparent;background:transparent;color:var(--muted);padding:6px 12px;border-radius:8px;font:inherit;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap}
 .seg button:hover{color:var(--text)}
-.seg button[aria-pressed="true"]{background:var(--raised);color:var(--text);border-color:var(--line)}
+.seg button[aria-pressed="true"]{background:transparent;color:var(--accent);border:1.5px solid var(--brand)}
 .seg button:focus-visible{outline:2px solid var(--brand);outline-offset:1px}
 .top2{display:grid;grid-template-columns:max-content minmax(0,1fr);gap:16px;align-items:stretch}
 @media (max-width:900px){.top2{grid-template-columns:minmax(0,1fr)}}
@@ -68,9 +68,12 @@ h2.big{font-size:20px;margin-top:32px}
 .jr .n{width:18px;color:var(--muted);font-size:12px}
 .jr .p{flex:1;display:flex;flex-wrap:wrap;gap:4px;align-items:center;color:var(--muted)}
 .jr .c{color:var(--muted);font-size:14px;font-weight:700;white-space:nowrap}
-.sechead{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:32px}
-.sechead h2{margin:28px 0 8px}
-.exp{height:36px;padding:0 16px;border:1.5px solid var(--brand);border-radius:8px;background:transparent;color:var(--accent);font:inherit;font-size:14px;font-weight:600;cursor:pointer}
+.gap{margin-top:16px}
+.sum .note.lg{margin:0 0 8px}
+.sechead{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.sechead h2{margin:12px 0 8px}
+.sum .tbl{border:none;border-radius:0;background:none;padding:0 0 4px}
+.exp{height:28px;padding:0 12px;border:1.5px solid var(--brand);border-radius:7px;background:transparent;color:var(--accent);font:inherit;font-size:12px;font-weight:600;cursor:pointer}
 .exp:hover{background:var(--brand);color:#fff}
 .tbl .row:first-child{position:sticky;top:0;z-index:2;background:var(--card)}
 .tbl{overflow:auto;max-height:calc(20 * 71px + 55px);background-color:var(--card);background-image:radial-gradient(circle,var(--dot) 1px,transparent 1.5px);background-size:14px 14px;border:1px solid var(--line);border-radius:12px;padding:8px 12px}
@@ -96,7 +99,7 @@ h2.big{font-size:20px;margin-top:32px}
 <div class="content">
   <section id="report">
     <div class="titlebar">
-      <h1>Lead Touchpoints<span class="demo">Demo data</span></h1>
+      <h1>Lead Touchpoints</h1>
       <div class="seg" id="seg" role="group" aria-label="Time period"></div>
     </div>
     <div id="out"></div>
@@ -160,9 +163,11 @@ function render(d){
       '<div class="tp k-call"><b><i class="ti ti-phone-call"></i>Booked calls</b><span class="n">'+calls+'</span></div>'+
     '</div></div>'+
     '<div class="box sum"><h2>Total Touchpoints</h2><div class="cards">'+cards+'</div></div></div>'+
-    '<h2 class="big">Top 5 journeys</h2><div class="box">'+jr+'</div>'+
-    '<div class="note lg">Journeys are grouped by source type only. Leads who touched the same kinds of sources in the same order count as one journey, even if the specific ad or email was different. See the table below for exact ad and email names.</div>'+
-    '<div class="sechead"><h2 class="big">Lead Journeys</h2><button type="button" class="exp" id="exp">Export as CSV</button></div><div class="tbl" style="--n:'+max+'">'+head+rows+'</div>';
+    '<div class="box sum gap"><h2>Top 5 journeys</h2>'+
+      '<div class="note lg">Journeys are grouped by source type only. Leads who touched the same kinds of sources in the same order count as one journey, even if the specific ad or email was different. See the Lead Journeys section below for exact ad and email names.</div>'+
+      jr+'</div>'+
+    '<div class="box sum gap"><div class="sechead"><h2>Lead Journeys</h2><button type="button" class="exp" id="exp">Export as CSV</button></div>'+
+      '<div class="tbl" style="--n:'+max+'">'+head+rows+'</div></div>';
   document.getElementById('exp').onclick=function(){exportCsv(leads)};
 }
 var PERIODS=[['today','Today',12],['yesterday','Yesterday',18],['7d','7 days',30],['30d','30 days',42],['3m','3 months',51],['6m','6 months',57],['1y','1 year',60]];
