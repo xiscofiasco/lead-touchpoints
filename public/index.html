@@ -115,7 +115,7 @@ h2.big{font-size:20px;margin-top:32px}
 </main>
 <script src="demo.js"></script>
 <script>
-var ICON={meta:'ti-brand-meta',google:'ti-brand-google',tiktok:'ti-brand-tiktok',reddit:'ti-brand-reddit',snapchat:'ti-brand-snapchat',applovin:'ti-apps',youtube:'ti-brand-youtube',linkedin:'ti-brand-linkedin',pinterest:'ti-brand-pinterest',x:'ti-brand-x',affiliate:'ti-users-group',call:'ti-phone-call',purchase:'ti-credit-card',other:'ti-world'};
+var ICON={meta:'ti-brand-meta',google:'ti-brand-google',tiktok:'ti-brand-tiktok',reddit:'ti-brand-reddit',snapchat:'ti-brand-snapchat',applovin:'ti-apps',youtube:'ti-brand-youtube',linkedin:'ti-brand-linkedin',pinterest:'ti-brand-pinterest',x:'ti-brand-x',affiliate:'ti-users-group',call:'ti-phone-call',purchase:'ti-currency-dollar',other:'ti-world'};
 var LABEL_ICON={'Google Org':'ti-brand-google','Facebook Org':'ti-brand-facebook','Insta Org':'ti-brand-instagram','TikTok Org':'ti-brand-tiktok','Email':'ti-mail','SMS':'ti-message-2','Manychat':'ti-message-circle','Organic':'ti-leaf'};
 function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
 function icon(t){return LABEL_ICON[t.label]||ICON[t.kind]||'ti-world'}
@@ -161,7 +161,7 @@ function render(d){
   var rows=leads.map(function(l){return '<div class="row"><div class="em" title="'+esc(l.email)+'">'+esc(l.email)+'</div><div class="jn">'+esc(l.joined)+'</div>'+l.touchpoints.map(card).join('')+'</div>'}).join('');
   document.getElementById('out').innerHTML=
     '<div class="top2"><div class="box sum"><h2>Conversions</h2><div class="cards conv">'+
-      '<div class="tp k-purchase"><b><i class="ti ti-credit-card"></i><em class="lb">Sales</em></b><span class="n">'+buys+' <span class="rv">($'+rev.toLocaleString('en-US')+')</span></span></div>'+
+      '<div class="tp k-purchase"><b><i class="ti ti-currency-dollar"></i><em class="lb">Sales</em></b><span class="n">'+buys+' <span class="rv">($'+rev.toLocaleString('en-US')+')</span></span></div>'+
       '<div class="tp k-call"><b><i class="ti ti-phone-call"></i><em class="lb">Booked calls</em></b><span class="n">'+calls+'</span></div>'+
     '</div></div>'+
     '<div class="box sum"><h2>Total Touchpoints</h2><div class="cards">'+cards+'</div></div></div>'+
