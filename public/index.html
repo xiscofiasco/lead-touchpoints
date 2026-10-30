@@ -163,7 +163,8 @@ document.getElementById('back').onclick=function(){
 };
 var root=document.documentElement,mq=window.matchMedia('(prefers-color-scheme: dark)');
 function curTheme(){return root.getAttribute('data-theme')||(mq.matches?'dark':'light')}
-function paintTheme(){var d=curTheme()==='dark';document.getElementById('i-sun').hidden=!d;document.getElementById('i-moon').hidden=d;document.getElementById('themebtn').setAttribute('aria-label',d?'Switch to light mode':'Switch to dark mode')}
+function setHid(el,h){if(h)el.setAttribute('hidden','');else el.removeAttribute('hidden')}
+function paintTheme(){var d=curTheme()==='dark';setHid(document.getElementById('i-sun'),!d);setHid(document.getElementById('i-moon'),d);document.getElementById('themebtn').setAttribute('aria-label',d?'Switch to light mode':'Switch to dark mode')}
 document.getElementById('themebtn').addEventListener('click',function(){var n=curTheme()==='dark'?'light':'dark';root.setAttribute('data-theme',n);try{localStorage.setItem('hyros_theme',n)}catch(e){}paintTheme()});
 mq.addEventListener&&mq.addEventListener('change',paintTheme);
 paintTheme();
