@@ -45,7 +45,8 @@ h2.big{font-size:20px;margin-top:32px}
 .tp .rv{font-size:inherit;font-weight:inherit;opacity:1}
 .tp{position:relative;min-width:0;height:58px;border-radius:8px;padding:6px 4px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:1px}
 .tp b{max-width:100%;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:12px;font-weight:600;display:flex;align-items:center;gap:4px}
-.tp i{font-size:16px}
+.tp i,.chip i{font-size:16px;line-height:1;display:block}
+.lb{font-style:normal;line-height:1;display:block;transform:translateY(-1px)}
 .tp span{font-size:11px;width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;opacity:.85}
 .k-meta{background:#1877f2;color:#fff}
 .k-google{background:linear-gradient(135deg,#fde68a 0 25%,#bfdbfe 25% 50%,#fecaca 50% 75%,#bbf7d0 75%);color:#1f2937;border:1px solid rgba(0,0,0,.08)}
@@ -118,8 +119,8 @@ var ICON={meta:'ti-brand-meta',google:'ti-brand-google',tiktok:'ti-brand-tiktok'
 var LABEL_ICON={'Google Org':'ti-brand-google','Facebook Org':'ti-brand-facebook','Insta Org':'ti-brand-instagram','TikTok Org':'ti-brand-tiktok','Email':'ti-mail','SMS':'ti-message-2','Manychat':'ti-message-circle','Organic':'ti-leaf'};
 function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
 function icon(t){return LABEL_ICON[t.label]||ICON[t.kind]||'ti-world'}
-function card(t){return '<div class="tp k-'+t.kind+'" title="'+esc(t.tip||t.detail)+'"><b><i class="ti '+icon(t)+'"></i>'+esc(t.label)+'</b><span>'+esc(t.detail)+'</span></div>'}
-function chip(t){return '<span class="chip k-'+t.kind+'"><i class="ti '+icon(t)+'"></i>'+esc(t.label==='Purchase made'?'Purchase':t.label)+'</span>'}
+function card(t){return '<div class="tp k-'+t.kind+'" title="'+esc(t.tip||t.detail)+'"><b><i class="ti '+icon(t)+'"></i><em class="lb">'+esc(t.label)+'</em></b><span>'+esc(t.detail)+'</span></div>'}
+function chip(t){return '<span class="chip k-'+t.kind+'"><i class="ti '+icon(t)+'"></i><em class="lb">'+esc(t.label==='Purchase made'?'Purchase':t.label)+'</em></span>'}
 function csvCell(v){v=String(v==null?'':v);if(/^[=+\-@]/.test(v))v="'"+v;return '"'+v.replace(/"/g,'""')+'"'}
 function exportCsv(leads){
   var max=leads.reduce(function(m,l){return Math.max(m,l.touchpoints.length)},1),head=['Lead','Joined On'];
@@ -150,7 +151,7 @@ function render(d){
     paths[key].n++;
   });
   order.sort(function(a,b){return counts[b].n-counts[a].n});
-  var cards=order.map(function(k){var t=counts[k].t;return '<div class="tp k-'+t.kind+'"><b><i class="ti '+icon(t)+'"></i>'+esc(k)+'</b><span class="n">'+counts[k].n+'</span></div>'}).join('');
+  var cards=order.map(function(k){var t=counts[k].t;return '<div class="tp k-'+t.kind+'"><b><i class="ti '+icon(t)+'"></i><em class="lb">'+esc(k)+'</em></b><span class="n">'+counts[k].n+'</span></div>'}).join('');
   var top=Object.keys(paths).map(function(k){return paths[k]}).sort(function(a,b){return b.n-a.n}).slice(0,5);
   var jr=top.map(function(p,i){return '<div class="jr"><span class="n">'+(i+1)+'</span><div class="p">'+p.tps.map(chip).join(' › ')+'</div><span class="c">'+p.n+(p.n===1?' lead':' leads')+'</span></div>'}).join('');
   var max=leads.reduce(function(m,l){return Math.max(m,l.touchpoints.length)},1);
@@ -160,8 +161,8 @@ function render(d){
   var rows=leads.map(function(l){return '<div class="row"><div class="em" title="'+esc(l.email)+'">'+esc(l.email)+'</div><div class="jn">'+esc(l.joined)+'</div>'+l.touchpoints.map(card).join('')+'</div>'}).join('');
   document.getElementById('out').innerHTML=
     '<div class="top2"><div class="box sum"><h2>Conversions</h2><div class="cards conv">'+
-      '<div class="tp k-purchase"><b><i class="ti ti-credit-card"></i>Sales</b><span class="n">'+buys+' <span class="rv">($'+rev.toLocaleString('en-US')+')</span></span></div>'+
-      '<div class="tp k-call"><b><i class="ti ti-phone-call"></i>Booked calls</b><span class="n">'+calls+'</span></div>'+
+      '<div class="tp k-purchase"><b><i class="ti ti-credit-card"></i><em class="lb">Sales</em></b><span class="n">'+buys+' <span class="rv">($'+rev.toLocaleString('en-US')+')</span></span></div>'+
+      '<div class="tp k-call"><b><i class="ti ti-phone-call"></i><em class="lb">Booked calls</em></b><span class="n">'+calls+'</span></div>'+
     '</div></div>'+
     '<div class="box sum"><h2>Total Touchpoints</h2><div class="cards">'+cards+'</div></div></div>'+
     '<div class="box sum gap"><h2>Top 5 journeys</h2>'+
