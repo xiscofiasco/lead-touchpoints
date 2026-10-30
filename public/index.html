@@ -22,16 +22,7 @@ h1{font-size:28px;line-height:1.25;font-weight:600;margin:0 0 4px}
 h2{font-size:13px;font-weight:600;margin:28px 0 8px}
 .sub{color:var(--muted);font-size:14px;margin:0 0 16px}
 .content{flex:1}
-.gate{max-width:460px;margin:8vh auto 0}
-.gate form{display:flex;gap:8px;margin-top:16px}
-.gate input{flex:1;height:40px;border-radius:8px;border:1px solid var(--line);background:var(--raised);color:var(--text);padding:0 12px;font:inherit}
 button{font:inherit;cursor:pointer}
-.pri{height:40px;border-radius:8px;border:1px solid transparent;background:var(--brand);color:#fff;padding:0 16px;font-weight:600}
-.pri:hover{background:#4241d6}
-.sec{height:36px;border-radius:8px;border:1px solid var(--line);background:transparent;color:var(--text);padding:0 14px;font-size:14px}
-.sec:hover{background:var(--btn-hover)}
-.top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap;padding-right:52px}
-.err{color:#c0392b;font-size:13px;min-height:18px;margin-top:8px}
 .note{color:var(--muted);font-size:12px;margin-top:6px}
 .box{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:8px 14px}
 .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px}
@@ -84,23 +75,9 @@ button{font:inherit;cursor:pointer}
 <button type="button" class="themebtn" id="themebtn" aria-label="Switch theme"><svg id="i-sun" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg><svg id="i-moon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></button>
 <p class="brand"><img src="hyros-logo.png" alt="Hyros" width="133" height="40"></p>
 <div class="content">
-  <section id="gate" class="gate">
-    <h1>Lead Touchpoints</h1>
-    <p class="sub">Enter a product ID to see every touchpoint, lead by lead.</p>
-    <form id="form">
-      <input id="pid" inputmode="numeric" pattern="[0-9]*" placeholder="Product ID, for example 217087" aria-label="Product ID" autofocus>
-      <button class="pri" type="submit">Open report</button>
-    </form>
-    <div id="err" class="err"></div>
-  </section>
-  <section id="report" hidden>
-    <div class="top">
-      <div>
-        <h1>Lead Touchpoints<span class="demo">Demo data</span></h1>
-        <p class="sub" id="sub"></p>
-      </div>
-      <button id="back" class="sec" type="button">Change product ID</button>
-    </div>
+  <section id="report">
+    <h1>Lead Touchpoints<span class="demo">Demo data</span></h1>
+    <p class="sub">One row per lead, one card per touchpoint, in the order they happened.</p>
     <div id="out"></div>
   </section>
 </div>
@@ -118,7 +95,7 @@ function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return
 function icon(t){return LABEL_ICON[t.label]||ICON[t.kind]||'ti-world'}
 function card(t){return '<div class="tp k-'+t.kind+'" title="'+esc(t.tip||t.detail)+'"><b><i class="ti '+icon(t)+'"></i>'+esc(t.label)+'</b><span>'+esc(t.detail)+'</span></div>'}
 function chip(t){return '<span class="chip k-'+t.kind+'"><i class="ti '+icon(t)+'"></i>'+esc(t.label==='Purchase made'?'Purchase':t.label)+'</span>'}
-function render(d,pid){
+function render(d){
   var leads=d.leads||[],counts={},order=[],paths={};
   leads.forEach(function(l){
     l.touchpoints.forEach(function(t){
@@ -140,27 +117,13 @@ function render(d,pid){
   var rows=leads.map(function(l){return '<div class="row"><div class="em" title="'+esc(l.email)+'">'+esc(l.email)+'</div>'+l.touchpoints.map(card).join('')+'</div>'}).join('');
   var skipped=d.skippedNoAttribution||0;
   var foot='These are '+leads.length+' made up leads with attribution. '+skipped+' other leads created in the same period had no attribution and were left out.';
-  document.getElementById('sub').textContent='Product ID '+pid+'. One row per lead, one card per touchpoint, in the order they happened.';
   document.getElementById('out').innerHTML=
     '<h2>Touchpoints per source</h2><div class="cards">'+cards+'</div>'+
     '<h2>Top 5 journeys</h2><div class="box">'+jr+'</div>'+
     '<div class="note">Journeys are grouped by source type only. Leads who touched the same kinds of sources in the same order count as one journey, even if the specific ad or email was different. See the table below for exact ad and email names.</div>'+
     '<h2>Leads</h2><div class="tbl" style="--n:'+max+'">'+head+rows+'</div><div class="note">'+foot+'</div>';
 }
-document.getElementById('form').onsubmit=function(e){
-  e.preventDefault();
-  var pid=document.getElementById('pid').value.trim();
-  if(!/^\d{4,10}$/.test(pid)){document.getElementById('err').textContent='Enter a numeric product ID.';return}
-  document.getElementById('err').textContent='';
-  render(window.DEMO,pid);
-  document.getElementById('gate').hidden=true;
-  document.getElementById('report').hidden=false;
-};
-document.getElementById('back').onclick=function(){
-  document.getElementById('report').hidden=true;
-  document.getElementById('gate').hidden=false;
-  document.getElementById('pid').focus();
-};
+render(window.DEMO);
 var root=document.documentElement,mq=window.matchMedia('(prefers-color-scheme: dark)');
 function curTheme(){return root.getAttribute('data-theme')||(mq.matches?'dark':'light')}
 function setHid(el,h){if(h)el.setAttribute('hidden','');else el.removeAttribute('hidden')}
