@@ -39,11 +39,40 @@
     }
   }
 
+  // Days back for each lead, newest first: 8 today, 8 yesterday, 14 this week, then older.
+  var offsets = [].concat(
+    [0, 0, 0, 0, 0, 0, 0, 0],
+    [1, 1, 1, 1, 1, 1, 1, 1],
+    [2, 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 6, 6, 6],
+    [7, 9, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28],
+    [32, 38, 44, 50, 56, 62, 70, 78, 86],
+    [95, 110, 125, 140, 155, 170],
+    [200, 260, 330]
+  );
+  var now = new Date();
+  var startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+  var nowMin = Math.max(20, Math.floor((now.getTime() - startOfToday) / 60000));
+  var seen = {};
+  var pad = function (n) { return n < 10 ? '0' + n : '' + n; };
+  function stamp(i) {
+    var off = offsets[i], j = seen[off] = (seen[off] === undefined ? 0 : seen[off] + 1);
+    var minutes = off === 0 ? Math.floor(nowMin * (8 - j) / 8.6) : 1380 - j * 160 - (i * 13) % 40;
+    return startOfToday - off * 86400000 + minutes * 60000 + ((i * 29) % 60) * 1000;
+  }
+  function format(ts) {
+    var d = new Date(ts);
+    return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()) + ' ' +
+      pad(d.getHours()) + ':' + pad(d.getMinutes()) + ':' + pad(d.getSeconds());
+  }
+
   window.DEMO = {
     demo: true,
     leads: recipes.map(function (r, i) {
+      var ts = stamp(i);
       return {
         email: names[i] + '@example.com',
+        joinedTs: ts,
+        joined: format(ts),
         touchpoints: r.map(function (tok, k) { return touch(tok, k === 0); })
       };
     })

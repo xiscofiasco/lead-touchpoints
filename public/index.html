@@ -77,12 +77,13 @@ h2.big{font-size:20px;margin-top:32px}
 .exp:hover{background:var(--brand);color:#fff}
 .tbl .row:first-child{position:sticky;top:0;z-index:2;background:var(--card)}
 .tbl{overflow:auto;max-height:calc(12 * 71px + 55px);background-color:var(--card);background-image:radial-gradient(circle,var(--dot) 1px,transparent 1.5px);background-size:14px 14px;border:1px solid var(--line);border-radius:12px;padding:8px 12px}
-.row{display:grid;grid-template-columns:200px repeat(var(--n),128px);gap:16px;align-items:center;padding:6px 0;border-bottom:1px solid var(--line);min-width:calc(200px + var(--n) * 144px)}
+.row{display:grid;grid-template-columns:200px 150px repeat(var(--n),128px);gap:16px;align-items:center;padding:6px 0;border-bottom:1px solid var(--line);min-width:calc(382px + var(--n) * 144px)}
+.jn{font-size:13px;font-weight:600;white-space:nowrap;font-variant-numeric:tabular-nums}
 .row:last-child{border:none}
 .em{font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .hd{text-align:center;color:var(--muted);font-size:14px;font-weight:700}
 .row>.tp::before{content:'›';position:absolute;left:-13px;top:50%;transform:translateY(-50%);width:10px;text-align:center;color:var(--muted)}
-.row>.em+.tp::before{content:none}
+.row>.jn+.tp::before{content:none}
 .demo{display:inline-block;font-size:11px;font-weight:600;padding:2px 8px;border-radius:6px;background:var(--brand);color:#fff;margin-left:8px;vertical-align:middle}
 .actions{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:12px;width:max-content;max-width:100%;margin:32px auto 0}
 @media (max-width:540px){.actions{grid-auto-flow:row;width:100%;max-width:280px}}
@@ -121,11 +122,11 @@ function card(t){return '<div class="tp k-'+t.kind+'" title="'+esc(t.tip||t.deta
 function chip(t){return '<span class="chip k-'+t.kind+'"><i class="ti '+icon(t)+'"></i>'+esc(t.label==='Purchase made'?'Purchase':t.label)+'</span>'}
 function csvCell(v){v=String(v==null?'':v);if(/^[=+\-@]/.test(v))v="'"+v;return '"'+v.replace(/"/g,'""')+'"'}
 function exportCsv(leads){
-  var max=leads.reduce(function(m,l){return Math.max(m,l.touchpoints.length)},1),head=['Lead'];
+  var max=leads.reduce(function(m,l){return Math.max(m,l.touchpoints.length)},1),head=['Lead','Joined On'];
   for(var i=1;i<=max;i++)head.push('Touchpoint '+i);
   var lines=[head.map(csvCell).join(',')];
   leads.forEach(function(l){
-    var row=[l.email];
+    var row=[l.email,l.joined];
     for(var i=0;i<max;i++){var t=l.touchpoints[i];row.push(t?t.label+(t.detail?': '+t.detail:''):'')}
     lines.push(row.map(csvCell).join(','));
   });
@@ -153,10 +154,10 @@ function render(d){
   var top=Object.keys(paths).map(function(k){return paths[k]}).sort(function(a,b){return b.n-a.n}).slice(0,5);
   var jr=top.map(function(p,i){return '<div class="jr"><span class="n">'+(i+1)+'</span><div class="p">'+p.tps.map(chip).join(' › ')+'</div><span class="c">'+p.n+(p.n===1?' lead':' leads')+'</span></div>'}).join('');
   var max=leads.reduce(function(m,l){return Math.max(m,l.touchpoints.length)},1);
-  var head='<div class="row"><div class="em" style="color:var(--muted);font-weight:700;font-size:14px">Lead</div>';
+  var head='<div class="row"><div class="em" style="color:var(--muted);font-weight:700;font-size:14px">Lead</div><div class="jn" style="color:var(--muted);font-weight:700;font-size:14px">Joined On</div>';
   for(var i=1;i<=max;i++){head+='<div class="hd">Touchpoint '+i+'</div>'}
   head+='</div>';
-  var rows=leads.map(function(l){return '<div class="row"><div class="em" title="'+esc(l.email)+'">'+esc(l.email)+'</div>'+l.touchpoints.map(card).join('')+'</div>'}).join('');
+  var rows=leads.map(function(l){return '<div class="row"><div class="em" title="'+esc(l.email)+'">'+esc(l.email)+'</div><div class="jn">'+esc(l.joined)+'</div>'+l.touchpoints.map(card).join('')+'</div>'}).join('');
   document.getElementById('out').innerHTML=
     '<div class="top2"><div class="box sum"><h2>Conversions</h2><div class="cards conv">'+
       '<div class="tp k-purchase"><b><i class="ti ti-credit-card"></i>Sales</b><span class="n">'+buys+' <span class="rv">($'+rev.toLocaleString('en-US')+')</span></span></div>'+
@@ -170,7 +171,13 @@ function render(d){
       '<div class="tbl" style="--n:'+max+'">'+head+rows+'</div></div>';
   document.getElementById('exp').onclick=function(){exportCsv(leads)};
 }
-var PERIODS=[['today','Today',12],['yesterday','Yesterday',18],['7d','7 days',30],['30d','30 days',42],['3m','3 months',51],['6m','6 months',57],['1y','1 year',60]];
+var PERIODS=[['today','Today',0],['yesterday','Yesterday',1],['7d','7 days',6],['30d','30 days',29],['3m','3 months',89],['6m','6 months',179],['1y','1 year',364]];
+function inPeriod(l,p){
+  var n=new Date(),sod=new Date(n.getFullYear(),n.getMonth(),n.getDate()).getTime(),day=86400000;
+  if(p[0]==='today')return l.joinedTs>=sod;
+  if(p[0]==='yesterday')return l.joinedTs>=sod-day&&l.joinedTs<sod;
+  return l.joinedTs>=sod-p[2]*day;
+}
 var period='7d',seg=document.getElementById('seg');
 PERIODS.forEach(function(p){
   var b=document.createElement('button');
@@ -181,7 +188,7 @@ PERIODS.forEach(function(p){
 function showPeriod(){
   var p=PERIODS.filter(function(x){return x[0]===period})[0];
   [].forEach.call(seg.children,function(b){b.setAttribute('aria-pressed',b.getAttribute('data-p')===period?'true':'false')});
-  render({leads:window.DEMO.leads.slice(0,p[2])});
+  render({leads:window.DEMO.leads.filter(function(l){return inPeriod(l,p)})});
 }
 showPeriod();
 var root=document.documentElement,mq=window.matchMedia('(prefers-color-scheme: dark)');
